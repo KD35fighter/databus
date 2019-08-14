@@ -1,15 +1,13 @@
 <?php
-namespace common\models;
-//require_once './Encrypt.class.php';
 /*
  * 清博开放平台自定义
  * author sunyanyan
  * */
 
 class Databus{
-    //榜单账号  歌华有线账号
-    private $app_key1 = '4452faa67614044cc5474b44ee40a603';
-    private $app_secret1 = 'f52ad4941028a31c7511bf57ccd5213b';
+    //榜单账号
+    private $app_key1 = '';
+    private $app_secret1 = '';
 
     private $requesturl;
 
@@ -256,7 +254,7 @@ class Databus{
      * */
     public function pubsentindex(){
         $route = '/pubsent/stats/index';
-        $rs = $this->request('',$route,'wb');
+        $rs = $this->request('',$route);
         return $rs;
     }
 
@@ -272,7 +270,7 @@ class Databus{
         $params['posttime_start'] = date('Y-m-d',$timestmp);
         $params['posttime_end'] = date('Y-m-d 23:59:59',$timestmp);
         $params['media_type'] = 'wx,weibo,web,app,journal,forum,toutiao';
-        $rs = $this->request($params,$route,'wb');
+        $rs = $this->request($params,$route);
         return $rs;
     }
 
@@ -289,7 +287,7 @@ class Databus{
         $params['posttime_start'] = date('Y-m-d',time());
         $params['posttime_end'] = date('Y-m-d H:i:s',time());
         $params['media_type'] = 'wx,weibo,web,app,journal,forum,toutiao';
-        $rs = $this->request($params,$route,'wb');
+        $rs = $this->request($params,$route);
         return $rs;
     }
 
@@ -306,7 +304,7 @@ class Databus{
         $params['news_emotion'] = 'negative';
         $params['refer_province'] = '湖北';
         $params['limit'] = 10;
-        $rs = $this->request($params,$route,'wb');
+        $rs = $this->request($params,$route);
         return $rs;
     }
 
@@ -320,7 +318,7 @@ class Databus{
         $params = [];
         $params['media_type'] = 'wx,weibo,web,app,journal,forum,toutiao';
         $params['limit'] = 1;
-        $rs = $this->request($params,$route,'wb');
+        $rs = $this->request($params,$route);
         return $rs;
     }
 
@@ -333,7 +331,7 @@ class Databus{
         $route = '/account/weixin/attribute';
         $params = [];
         $params['wx_name'] = $wx_name;
-        $rs = $this->request($params , $route , 'wx');
+        $rs = $this->request($params , $route);
         return $rs;
     }
 
@@ -346,7 +344,7 @@ class Databus{
         $route = '/spread/gsdata/wx-comment-data';
         $params = [];
         $params['wx_url'] = $wx_url;
-        $rs = $this->request($params , $route , 'wx');
+        $rs = $this->request($params , $route);
         return $rs;
     }
 
@@ -363,7 +361,7 @@ class Databus{
         $params['posttime_end'] = $posttime_end;
         $params['page'] = $page;
         $params['limit'] = $limit;
-        $rs = $this->request($params , $route , 'wx');
+        $rs = $this->request($params , $route);
         return $rs;
     }
 
@@ -379,7 +377,7 @@ class Databus{
         $params['posttime_end'] = $posttime_end;
         $params['page'] = $page;
         $params['limit'] = $limit;
-        $rs = $this->request($params , $route , 'wx');
+        $rs = $this->request($params , $route);
         return $rs;
     }
 
@@ -395,7 +393,7 @@ class Databus{
         $params['posttime_end'] = $posttime_end;
         $params['page'] = $page;
         $params['limit'] = $limit;
-        $rs = $this->request($params , $route , 'wx');
+        $rs = $this->request($params , $route);
         return $rs;
     }
 
@@ -449,14 +447,12 @@ class Databus{
 
 
 
-    private function request($param , $route , $type = 'wx'){
+    private function request($param , $route){
         $this->requesturl = 'http://databus.gsdata.cn:8888/api/service';
         $paramStr = $this->ASCIIarr($param);
-        if($type == 'wx'){
-            $sign = md5($this->app_secret1.$paramStr[1].$this->app_secret1);
-            $accesstoken = base64_encode($this->app_key1.':'.$sign.':'.$route);
-        }
 
+        $sign = md5($this->app_secret1.$paramStr[1].$this->app_secret1);
+        $accesstoken = base64_encode($this->app_key1.':'.$sign.':'.$route);
 
         $headers[] = 'Content-Type:application/x-www-form-urlencoded; charset=utf-8';
         $headers[] = 'access-token: '.$accesstoken;
@@ -469,7 +465,6 @@ class Databus{
 
 
     private function ASCIIarr($params = array()){
-        //echo '&amptimes';die;
         if (!empty($params)) {
             $p = ksort($params);
             if ($p) {
